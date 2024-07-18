@@ -15,25 +15,27 @@ export const ScalableContainer: React.FC<ScalableContainerProps> = ({
   minScale = 0,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [childSize, setChildSize] = useState({ width: 0, height: 0 });
   const [scale, setScale] = useState(1);
 
+  useEffect(() => {
+    const childRect = contentRef.current?.getBoundingClientRect();
+    if (childRect) {
+      setChildSize({ width: childRect.width, height: childRect.height });
+    }
+    console.log("tktk childRect", childRect);
+  }, []);
+
   const updateScale = () => {
-    if (containerRef.current) {
-      const { width, height } = containerRef.current.getBoundingClientRect();
-      const childWidth = containerRef.current.scrollWidth;
-      const childHeight = containerRef.current.scrollHeight;
-      const scaleWidth = width / childWidth;
-      const scaleHeight = height / childHeight;
+    if (containerRef.current && contentRef.current) {
+      const { width: containerWidth, height: containerHeight } =
+        containerRef.current.getBoundingClientRect();
+
+      const scaleWidth = containerWidth / childSize.width;
+      const scaleHeight = containerHeight / childSize.height;
       const newScale = Math.min(scaleWidth, scaleHeight);
       setScale(Math.max(minScale, Math.min(maxScale, newScale)));
-      console.log("tktk", {
-        scale,
-        newScale,
-        minScale,
-        maxScale,
-        w: { width, childWidth },
-        h: { height, childHeight },
-      });
     }
   };
 
@@ -55,6 +57,7 @@ export const ScalableContainer: React.FC<ScalableContainerProps> = ({
     <div
       ref={containerRef}
       style={{
+        border: "1px solid green",
         width: "100%",
         height: "100%",
         overflow: "hidden",
@@ -63,13 +66,16 @@ export const ScalableContainer: React.FC<ScalableContainerProps> = ({
     >
       <div
         style={{
+          border: "1px solid red",
           transform: `scale(${scale})`,
           transformOrigin: "top left",
           width: "fit-content",
           height: "fit-content",
         }}
       >
-        {children}
+        <div style={{}} ref={contentRef}>
+          {children}
+        </div>
       </div>
     </div>
   );
