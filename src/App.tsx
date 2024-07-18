@@ -7,7 +7,27 @@ function App() {
   const [height, setHeight] = useState(200);
 
   return (
-    <>
+    <div style={{ width: "100vw", height: "100vh" }}>
+      <div>
+        <p>Width: {width}</p>
+        <input
+          type="range"
+          min="1"
+          max="1000"
+          value={width}
+          onChange={(e) => setWidth(Number(e.target.value))}
+        />
+      </div>
+      <div>
+        <p>Height: {height}</p>
+        <input
+          type="range"
+          min="1"
+          max="1000"
+          value={height}
+          onChange={(e) => setHeight(Number(e.target.value))}
+        />
+      </div>
       <div
         style={{
           width: `${width}px`,
@@ -31,27 +51,7 @@ function App() {
           </div>
         </ScalableContainer>
       </div>
-      <div>
-        <p>Width: {width}</p>
-        <input
-          type="range"
-          min="1"
-          max="1000"
-          value={width}
-          onChange={(e) => setWidth(Number(e.target.value))}
-        />
-      </div>
-      <div>
-        <p>Height: {height}</p>
-        <input
-          type="range"
-          min="1"
-          max="1000"
-          value={height}
-          onChange={(e) => setHeight(Number(e.target.value))}
-        />
-      </div>
-    </>
+    </div>
   );
 }
 
