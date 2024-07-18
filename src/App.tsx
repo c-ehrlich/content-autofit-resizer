@@ -17,10 +17,17 @@ function App() {
       >
         <ScalableContainer>
           <div
-            style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "10px",
+              border: "1px solid yellow",
+            }}
           >
-            <div style={{ fontSize: "40px" }}>400,000ms</div>
-            <div style={{ fontSize: "20px" }}>Down 30%</div>
+            <div style={{ padding: "10px" }}>
+              <div style={{ fontSize: "40px" }}>400,000ms</div>
+              <div style={{ fontSize: "20px" }}>Down 30%</div>
+            </div>
           </div>
         </ScalableContainer>
       </div>

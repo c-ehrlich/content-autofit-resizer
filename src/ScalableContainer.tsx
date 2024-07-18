@@ -24,8 +24,7 @@ export const ScalableContainer: React.FC<ScalableContainerProps> = ({
     if (childRect) {
       setChildSize({ width: childRect.width, height: childRect.height });
     }
-    console.log("tktk childRect", childRect);
-  }, []);
+  }, [setChildSize]);
 
   const updateScale = () => {
     if (containerRef.current && contentRef.current) {
@@ -65,17 +64,19 @@ export const ScalableContainer: React.FC<ScalableContainerProps> = ({
       }}
     >
       <div
+        ref={contentRef}
         style={{
           border: "1px solid red",
-          transform: `scale(${scale})`,
-          transformOrigin: "top left",
-          width: "fit-content",
+          position: "absolute",
+          top: "50%",
+          left: "50%",
           height: "fit-content",
+          width: "fit-content",
+          transform: `scale(${scale}) translate(-50%, -50%)`,
+          transformOrigin: "top left",
         }}
       >
-        <div style={{}} ref={contentRef}>
-          {children}
-        </div>
+        {children}
       </div>
     </div>
   );
