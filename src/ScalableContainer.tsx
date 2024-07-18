@@ -4,15 +4,13 @@ import debounce from "lodash/debounce";
 interface ScalableContainerProps {
   children: React.ReactNode;
   debounceDelay?: number;
-  maxScale?: number;
-  minScale?: number;
+  canGrow?: boolean;
 }
 
 export const ScalableContainer: React.FC<ScalableContainerProps> = ({
   children,
   debounceDelay = 100,
-  maxScale = Infinity,
-  minScale = 0,
+  canGrow = true,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -34,7 +32,8 @@ export const ScalableContainer: React.FC<ScalableContainerProps> = ({
       const scaleWidth = containerWidth / childSize.width;
       const scaleHeight = containerHeight / childSize.height;
       const newScale = Math.min(scaleWidth, scaleHeight);
-      setScale(Math.max(minScale, Math.min(maxScale, newScale)));
+      const maxScale = canGrow ? Infinity : 1;
+      setScale(Math.min(maxScale, newScale));
     }
   };
 
