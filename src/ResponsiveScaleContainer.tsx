@@ -7,7 +7,7 @@ interface ScalableContainerProps {
   canGrow?: boolean;
 }
 
-export const ResponsiveScaleContainer: React.FC<ScalableContainerProps> = ({
+export const TailorWithArbitraryContent: React.FC<ScalableContainerProps> = ({
   children,
   debounceDelay = 100,
   canGrow = true,

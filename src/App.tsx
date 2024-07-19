@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import { ResponsiveScaleContainer } from "./ResponsiveScaleContainer";
+import { TailorWithArbitraryContent } from "./ResponsiveScaleContainer";
 
 function App() {
   const [width, setWidth] = useState(200);
@@ -35,7 +35,7 @@ function App() {
           border: "1px solid black",
         }}
       >
-        <ResponsiveScaleContainer>
+        <TailorWithArbitraryContent>
           <div
             style={{
               display: "flex",
@@ -47,7 +47,7 @@ function App() {
             <div style={{ fontSize: "40px" }}>400,000ms</div>
             <div style={{ fontSize: "20px" }}>Down 30%</div>
           </div>
-        </ResponsiveScaleContainer>
+        </TailorWithArbitraryContent>
       </div>
     </div>
   );
