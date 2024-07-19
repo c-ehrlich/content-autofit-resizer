@@ -1,5 +1,11 @@
 import debounce from "lodash/debounce";
-import React, { useRef, useState, useLayoutEffect, useCallback } from "react";
+import React, {
+  useRef,
+  useState,
+  useLayoutEffect,
+  useCallback,
+  useEffect,
+} from "react";
 
 interface ContentAutofitResizerProps {
   children: React.ReactNode;
@@ -120,6 +126,24 @@ export const ContentAutofitResizer = ({
       }
     };
   }, []);
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      causeResize();
+    });
+
+    if (contentRef.current) {
+      observer.observe(contentRef.current, {
+        childList: true,
+        subtree: true,
+        characterData: true,
+      });
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [contentRef, causeResize]);
 
   return (
     <div ref={containerRef} className="relative w-full h-full overflow-hidden">

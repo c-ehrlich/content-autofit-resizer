@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import { ContentAutofitResizer } from "./ResponsiveScaleContainer";
+import { ContentAutofitResizer } from "./ContentAutofitResizer";
 
 function App() {
   const [width, setWidth] = useState(200);
@@ -36,16 +36,9 @@ function App() {
         }}
       >
         <ContentAutofitResizer>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "10px",
-              padding: "10px",
-            }}
-          >
-            <div style={{ fontSize: "40px" }}>400,000ms</div>
-            <div style={{ fontSize: "20px" }}>Down 30%</div>
+          <div className="flex flex-col gap-2 p-2">
+            <div className="text-4xl whitespace-nowrap">123,456 ms</div>
+            <div>Down 30%</div>
           </div>
         </ContentAutofitResizer>
       </div>
