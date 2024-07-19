@@ -79,8 +79,6 @@ export const ContentAutofitResizer = ({
       finalSize: 0,
     }));
 
-    // Need to add this requestAnimationFrame to match the behavior of react-measure and fix
-    // an issue where calculating the `startSize` is inaccurate.
     animationFrameID.current = window.requestAnimationFrame(() => {
       updateScale();
     });
@@ -88,12 +86,8 @@ export const ContentAutofitResizer = ({
 
   const onResize = () => {
     if (resizerState.firstRun) {
-      // We don't need to kick off a resize on the first run as
-      // we'll already be doing one
       setResizerState((prev) => ({ ...prev, firstRun: false }));
     } else {
-      // If this isn't the first run, we do want to resize the text as
-      // this elements size has changed
       const currentContainerSize =
         containerRef.current?.getBoundingClientRect();
       if (
@@ -126,8 +120,6 @@ export const ContentAutofitResizer = ({
       }
     };
   }, []);
-
-  console.log("tktk state", resizerState);
 
   return (
     <div
