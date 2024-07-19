@@ -1,4 +1,4 @@
-import React, { useRef, useState, useLayoutEffect } from "react";
+import React, { useRef, useState, useLayoutEffect, useCallback } from "react";
 import debounce from "lodash/debounce";
 
 interface ScalableContainerProps {
@@ -14,28 +14,38 @@ export const ResponsiveScaleContainer: React.FC<ScalableContainerProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const [childSize, setChildSize] = useState({ width: 0, height: 0 });
-  const [scale, setScale] = useState(1);
+  const [resizerState, setResizerState] = useState({
+    firstRun: true,
+    doneSizing: false,
+    childSize: { width: 0, height: 0 },
+    scale: 1,
+  });
 
   useLayoutEffect(() => {
     const childRect = contentRef.current?.getBoundingClientRect();
     if (childRect) {
-      setChildSize({ width: childRect.width, height: childRect.height });
+      setResizerState((prevState) => ({
+        ...prevState,
+        childSize: { width: childRect.width, height: childRect.height },
+      }));
     }
-  }, [setChildSize]);
+  }, [setResizerState]);
 
-  const updateScale = () => {
+  const updateScale = useCallback(() => {
     if (containerRef.current && contentRef.current) {
       const { width: containerWidth, height: containerHeight } =
         containerRef.current.getBoundingClientRect();
 
-      const scaleWidth = containerWidth / childSize.width;
-      const scaleHeight = containerHeight / childSize.height;
+      const scaleWidth = containerWidth / resizerState.childSize.width;
+      const scaleHeight = containerHeight / resizerState.childSize.height;
       const newScale = Math.min(scaleWidth, scaleHeight);
       const maxScale = canGrow ? Infinity : 1;
-      setScale(Math.min(maxScale, newScale));
+      setResizerState((prevState) => ({
+        ...prevState,
+        scale: Math.min(maxScale, newScale),
+      }));
     }
-  };
+  }, [canGrow, resizerState.childSize.height, resizerState.childSize.width]);
 
   const debouncedUpdateScale = debounce(updateScale, debounceDelay);
 
@@ -69,7 +79,7 @@ export const ResponsiveScaleContainer: React.FC<ScalableContainerProps> = ({
           left: "50%",
           height: "fit-content",
           width: "fit-content",
-          transform: `scale(${scale}) translate(-50%, -50%)`,
+          transform: `scale(${resizerState.scale}) translate(-50%, -50%)`,
           transformOrigin: "top left",
         }}
       >
