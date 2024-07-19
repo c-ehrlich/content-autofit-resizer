@@ -12,6 +12,8 @@ export const ResponsiveScaleContainer: React.FC<ScalableContainerProps> = ({
   debounceDelay = 100,
   canGrow = true,
 }) => {
+  const animationFrameID = React.useRef<number>(0);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const [resizerState, setResizerState] = useState({
@@ -72,9 +74,9 @@ export const ResponsiveScaleContainer: React.FC<ScalableContainerProps> = ({
 
     // Need to add this requestAnimationFrame to match the behavior of react-measure and fix
     // an issue where calculating the `startSize` is inaccurate.
-    // animationFrameID.current = window.requestAnimationFrame(() => {
-    //   processText();
-    // });
+    animationFrameID.current = window.requestAnimationFrame(() => {
+      updateScale();
+    });
   };
 
   const onResize = () => {
@@ -109,6 +111,14 @@ export const ResponsiveScaleContainer: React.FC<ScalableContainerProps> = ({
       resizeObserver.disconnect();
     };
   }, [debouncedOnResize]);
+
+  useLayoutEffect(() => {
+    return () => {
+      if (window !== null) {
+        window.cancelAnimationFrame(animationFrameID.current);
+      }
+    };
+  }, []);
 
   console.log("tktk state", resizerState);
 
