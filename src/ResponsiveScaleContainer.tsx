@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useState, useLayoutEffect } from "react";
 import debounce from "lodash/debounce";
 
 interface ScalableContainerProps {
@@ -7,7 +7,7 @@ interface ScalableContainerProps {
   canGrow?: boolean;
 }
 
-export const ScalableContainer: React.FC<ScalableContainerProps> = ({
+export const ResponsiveScaleContainer: React.FC<ScalableContainerProps> = ({
   children,
   debounceDelay = 100,
   canGrow = true,
@@ -17,7 +17,7 @@ export const ScalableContainer: React.FC<ScalableContainerProps> = ({
   const [childSize, setChildSize] = useState({ width: 0, height: 0 });
   const [scale, setScale] = useState(1);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const childRect = contentRef.current?.getBoundingClientRect();
     if (childRect) {
       setChildSize({ width: childRect.width, height: childRect.height });
@@ -39,7 +39,7 @@ export const ScalableContainer: React.FC<ScalableContainerProps> = ({
 
   const debouncedUpdateScale = debounce(updateScale, debounceDelay);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const resizeObserver = new ResizeObserver(debouncedUpdateScale);
 
     if (containerRef.current) {
@@ -55,7 +55,6 @@ export const ScalableContainer: React.FC<ScalableContainerProps> = ({
     <div
       ref={containerRef}
       style={{
-        border: "1px solid green",
         width: "100%",
         height: "100%",
         overflow: "hidden",
@@ -65,7 +64,6 @@ export const ScalableContainer: React.FC<ScalableContainerProps> = ({
       <div
         ref={contentRef}
         style={{
-          border: "1px solid red",
           position: "absolute",
           top: "50%",
           left: "50%",

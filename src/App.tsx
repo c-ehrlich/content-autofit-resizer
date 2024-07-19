@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./App.css";
-import { ScalableContainer } from "./ScalableContainer";
+import { ResponsiveScaleContainer } from "./ResponsiveScaleContainer";
 
 function App() {
   const [width, setWidth] = useState(200);
@@ -35,20 +35,19 @@ function App() {
           border: "1px solid black",
         }}
       >
-        <ScalableContainer>
+        <ResponsiveScaleContainer>
           <div
             style={{
               display: "flex",
               flexDirection: "column",
               gap: "10px",
-              border: "1px solid yellow",
               padding: "10px",
             }}
           >
             <div style={{ fontSize: "40px" }}>400,000ms</div>
             <div style={{ fontSize: "20px" }}>Down 30%</div>
           </div>
-        </ScalableContainer>
+        </ResponsiveScaleContainer>
       </div>
     </div>
   );
