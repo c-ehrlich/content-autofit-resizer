@@ -125,15 +125,10 @@ export const ContentAutofitResizer = ({
     <div ref={containerRef} className="relative w-full h-full overflow-hidden">
       <div
         ref={contentRef}
+        className="absolute top-1/2 left-1/2 h-fit w-fit select-none"
         style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          height: "fit-content",
-          width: "fit-content",
           transform: `scale(${resizerState.scale}) translate(-50%, -50%)`,
           transformOrigin: "top left",
-          userSelect: "none",
         }}
       >
         {children}
