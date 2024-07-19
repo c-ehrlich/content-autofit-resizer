@@ -1,5 +1,5 @@
-import React, { useRef, useState, useLayoutEffect, useCallback } from "react";
 import debounce from "lodash/debounce";
+import React, { useRef, useState, useLayoutEffect, useCallback } from "react";
 
 interface ScalableContainerProps {
   children: React.ReactNode;
