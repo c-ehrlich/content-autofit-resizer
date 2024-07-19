@@ -140,6 +140,7 @@ export const TailorWithArbitraryContent: React.FC<ScalableContainerProps> = ({
           width: "fit-content",
           transform: `scale(${resizerState.scale}) translate(-50%, -50%)`,
           transformOrigin: "top left",
+          userSelect: "none",
         }}
       >
         {children}
