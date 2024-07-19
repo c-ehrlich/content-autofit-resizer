@@ -17,6 +17,7 @@ export const ResponsiveScaleContainer: React.FC<ScalableContainerProps> = ({
   const [resizerState, setResizerState] = useState({
     firstRun: true,
     doneSizing: false,
+    containerSize: { width: 0, height: 0 },
     childSize: { width: 0, height: 0 },
     scale: 1,
   });
@@ -47,6 +48,7 @@ export const ResponsiveScaleContainer: React.FC<ScalableContainerProps> = ({
       setResizerState((prevState) => ({
         ...prevState,
         scale: Math.min(maxScale, newScale),
+        containerSize: { width: containerWidth, height: containerHeight },
         doneSizing: true,
       }));
     }
@@ -83,7 +85,14 @@ export const ResponsiveScaleContainer: React.FC<ScalableContainerProps> = ({
     } else {
       // If this isn't the first run, we do want to resize the text as
       // this elements size has changed
-      causeResize();
+      const currentContainerSize =
+        containerRef.current?.getBoundingClientRect();
+      if (
+        currentContainerSize?.width !== resizerState.containerSize.width ||
+        currentContainerSize?.height !== resizerState.containerSize.height
+      ) {
+        causeResize();
+      }
     }
   };
 
