@@ -20,7 +20,7 @@ export const TailorWithArbitraryContent: React.FC<ScalableContainerProps> = ({
     firstRun: true,
     doneSizing: false,
     containerSize: { width: 0, height: 0 },
-    childSize: { width: 0, height: 0 },
+    childSize: undefined as undefined | { width: number; height: number },
     scale: 1,
   });
 
@@ -43,8 +43,11 @@ export const TailorWithArbitraryContent: React.FC<ScalableContainerProps> = ({
       const { width: containerWidth, height: containerHeight } =
         containerRef.current.getBoundingClientRect();
 
-      const scaleWidth = containerWidth / resizerState.childSize.width;
-      const scaleHeight = containerHeight / resizerState.childSize.height;
+      const realChildSize =
+        resizerState.childSize || contentRef.current.getBoundingClientRect();
+
+      const scaleWidth = containerWidth / realChildSize.width;
+      const scaleHeight = containerHeight / realChildSize.height;
       const newScale = Math.min(scaleWidth, scaleHeight);
       const maxScale = canGrow ? Infinity : 1;
       setResizerState((prevState) => ({
@@ -54,12 +57,7 @@ export const TailorWithArbitraryContent: React.FC<ScalableContainerProps> = ({
         doneSizing: true,
       }));
     }
-  }, [
-    canGrow,
-    resizerState.childSize.height,
-    resizerState.childSize.width,
-    resizerState.doneSizing,
-  ]);
+  }, [canGrow, resizerState.childSize, resizerState.doneSizing]);
 
   useLayoutEffect(() => {
     updateScale();
