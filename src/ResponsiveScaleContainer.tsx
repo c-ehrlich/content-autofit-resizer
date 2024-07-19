@@ -32,7 +32,11 @@ export const ResponsiveScaleContainer: React.FC<ScalableContainerProps> = ({
   }, [setResizerState]);
 
   const updateScale = useCallback(() => {
-    if (containerRef.current && contentRef.current) {
+    if (
+      !resizerState.doneSizing &&
+      containerRef.current &&
+      contentRef.current
+    ) {
       const { width: containerWidth, height: containerHeight } =
         containerRef.current.getBoundingClientRect();
 
@@ -43,14 +47,50 @@ export const ResponsiveScaleContainer: React.FC<ScalableContainerProps> = ({
       setResizerState((prevState) => ({
         ...prevState,
         scale: Math.min(maxScale, newScale),
+        doneSizing: true,
       }));
     }
-  }, [canGrow, resizerState.childSize.height, resizerState.childSize.width]);
-
-  const debouncedUpdateScale = debounce(updateScale, debounceDelay);
+  }, [
+    canGrow,
+    resizerState.childSize.height,
+    resizerState.childSize.width,
+    resizerState.doneSizing,
+  ]);
 
   useLayoutEffect(() => {
-    const resizeObserver = new ResizeObserver(debouncedUpdateScale);
+    updateScale();
+  }, [updateScale]);
+
+  const causeResize = () => {
+    setResizerState((prev) => ({
+      ...prev,
+      doneSizing: false,
+      finalSize: 0,
+    }));
+
+    // Need to add this requestAnimationFrame to match the behavior of react-measure and fix
+    // an issue where calculating the `startSize` is inaccurate.
+    // animationFrameID.current = window.requestAnimationFrame(() => {
+    //   processText();
+    // });
+  };
+
+  const onResize = () => {
+    if (resizerState.firstRun) {
+      // We don't need to kick off a resize on the first run as
+      // we'll already be doing one
+      setResizerState((prev) => ({ ...prev, firstRun: false }));
+    } else {
+      // If this isn't the first run, we do want to resize the text as
+      // this elements size has changed
+      causeResize();
+    }
+  };
+
+  const debouncedOnResize = debounce(onResize, debounceDelay);
+
+  useLayoutEffect(() => {
+    const resizeObserver = new ResizeObserver(debouncedOnResize);
 
     if (containerRef.current) {
       resizeObserver.observe(containerRef.current);
@@ -59,7 +99,9 @@ export const ResponsiveScaleContainer: React.FC<ScalableContainerProps> = ({
     return () => {
       resizeObserver.disconnect();
     };
-  }, [debouncedUpdateScale]);
+  }, [debouncedOnResize]);
+
+  console.log("tktk state", resizerState);
 
   return (
     <div
