@@ -1,26 +1,35 @@
 import debounce from "lodash/debounce";
 import React, { useRef, useState, useLayoutEffect, useCallback } from "react";
 
-interface ScalableContainerProps {
+interface ContentAutofitResizerProps {
   children: React.ReactNode;
   debounceDelay?: number;
   canGrow?: boolean;
 }
 
-export const TailorWithArbitraryContent: React.FC<ScalableContainerProps> = ({
+type ContentAutofitResizerState = {
+  firstRun: boolean;
+  doneSizing: boolean;
+  containerSize: { width: number; height: number };
+  childSize?: { width: number; height: number };
+  scale: number;
+};
+
+export const ContentAutofitResizer = ({
   children,
   debounceDelay = 100,
   canGrow = true,
-}) => {
+}: ContentAutofitResizerProps) => {
   const animationFrameID = React.useRef<number>(0);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const [resizerState, setResizerState] = useState({
+
+  const [resizerState, setResizerState] = useState<ContentAutofitResizerState>({
     firstRun: true,
     doneSizing: false,
     containerSize: { width: 0, height: 0 },
-    childSize: undefined as undefined | { width: number; height: number },
+    childSize: undefined,
     scale: 1,
   });
 
